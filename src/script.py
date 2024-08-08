@@ -71,13 +71,18 @@ def marks_by_subject_lines(df, year:int):
 
 def mean_year(df, year:int):
     df_subset = choose_year(df, year)
-    media_columna = pd.to_numeric(df_subset['Mark'], errors='coerce').mean()
-    print(media_columna)
+    mean_column = pd.to_numeric(df_subset['Mark'], errors='coerce').mean()
+    return mean_column
 
 def median_year(df, year:int):
     df_subset = choose_year(df, year)
-    media_columna = pd.to_numeric(df_subset['Mark'], errors='coerce').median()
-    print(media_columna)
+    median_column = pd.to_numeric(df_subset['Mark'], errors='coerce').median()
+    return median_column
+
+def mode_year(df, year:int):
+    df_subset = choose_year(df, year)
+    mode_column = pd.to_numeric(df_subset['Mark'], errors='coerce').mode()
+    return mode_column
     
 def choose_year(df, year:int):
     if year == 1:
