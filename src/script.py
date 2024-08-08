@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def marks_by_subject_bars(df, year:int):
-    df_subset = None
+    df_subset = choose_year(df, year)
+
     if year == 1:
         df_subset = df.iloc[:10]
     elif year == 2:
@@ -38,15 +39,7 @@ def marks_by_subject_bars(df, year:int):
     plt.show()
 
 def marks_by_subject_lines(df, year:int):
-    df_subset = None
-    if year == 1:
-        df_subset = df.iloc[:10]
-    elif year == 2:
-        df_subset = df.iloc[10:20]
-    elif year == 3:
-        df_subset = df.iloc[20:30]
-    else:
-        df_subset = df.iloc[30:40]
+    df_subset = choose_year(df, year)
 
     x = df_subset['Subject']
     y = pd.to_numeric(df_subset['Mark'], errors='coerce')
@@ -75,6 +68,27 @@ def marks_by_subject_lines(df, year:int):
 
     fig.tight_layout()
     plt.show()
+
+def mean_year(df, year:int):
+    df_subset = choose_year(df, year)
+    media_columna = pd.to_numeric(df_subset['Mark'], errors='coerce').mean()
+    print(media_columna)
+
+def median_year(df, year:int):
+    df_subset = choose_year(df, year)
+    media_columna = pd.to_numeric(df_subset['Mark'], errors='coerce').median()
+    print(media_columna)
+    
+def choose_year(df, year:int):
+    if year == 1:
+        df = df.iloc[:10]
+    elif year == 2:
+        df = df.iloc[10:20]
+    elif year == 3:
+        df = df.iloc[20:30]
+    else:
+        df = df.iloc[30:40]
+    return df
 
 def main():
     df = pd.read_excel('dataset.xlsx')
