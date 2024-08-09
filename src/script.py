@@ -155,38 +155,19 @@ def mode_year(df, year:int, semester=None):
     return mode_column
     
 def choose_year(df, year:int, semester=None):
-    if semester == None:
-        if year == 1:
-            df = df.iloc[:10]
-        elif year == 2:
-            df = df.iloc[10:20]
-        elif year == 3:
-            df = df.iloc[20:30]
-        else:
-            df = df.iloc[30:40]
+    start_row = (year - 1) * 10
+    if semester is not None:
+        start_row += (semester - 1) * 5
+        end_row = start_row + 5
     else:
-        if year == 1 and semester == 1:
-            df = df.iloc[:5]
-        elif year == 1 and semester == 2:
-            df = df.iloc[5:10]
-        elif year == 2 and semester == 1:
-            df = df.iloc[10:15]
-        elif year == 2 and semester == 2:
-            df = df.iloc[15:20]
-        elif year == 2 and semester == 1:
-            df = df.iloc[20:25]
-        elif year == 2 and semester == 2:
-            df = df.iloc[25:30]
-        elif year == 2 and semester == 1:
-            df = df.iloc[30:35]
-        else:
-            df = df.iloc[35:40]
+        end_row = start_row + 10
+    df = df.iloc[start_row:end_row]
     return df
 
 def main():
     df = pd.read_excel('dataset.xlsx')
-    #marks_by_subject(df, type_graph="bars", year=1)
-    credit_passed_type(df)
+    marks_by_subject(df, type_graph="bars", year=3, semester=2)
+    # credit_passed_type(df)
     # credit_percentage_type(df)
     # credit_total_type(df)
 
