@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def marks_by_subject(df, type_graph="bars", year=1, semester=None):
+def marks_by_subject(df, type_graph="bars", year=0, semester=None):
     df_subset = choose_year(df, year, semester)
 
     x = df_subset["Subject"]
@@ -27,7 +27,7 @@ def marks_by_subject(df, type_graph="bars", year=1, semester=None):
         "grid.color": "#555555"
     })
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(30, 12))
 
     if(type_graph == "bars"):
         ax.bar(x, y, color=bar_colors)
@@ -39,17 +39,24 @@ def marks_by_subject(df, type_graph="bars", year=1, semester=None):
         handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10, linestyle='') for color in colors]
 
     ax.set_ylim(0, 10)
-    ax.set_ylabel("Mark")
-    if semester == None:
-        ax.set_title('Marks by Subject Year ' + str(year))
+    ax.set_ylabel("Mark", fontsize=20)
+    if year < 1 or year > 4:
+        ax.set_title('Marks by Subject in the Degree', fontsize=24)
     else:
-        ax.set_title('Marks by Subject Year ' + str(year) + ' and Semester ' + str(semester))
-    plt.xticks(rotation=45, ha='right', rotation_mode='default')
+        if semester == None:
+            ax.set_title('Marks by Subject Year ' + str(year), fontsize=24)
+        else:
+            ax.set_title('Marks by Subject Year ' + str(year) + ' and Semester ' + str(semester), fontsize=24)
+    plt.xticks(rotation=45, ha='right', rotation_mode='default', fontsize=16)
+    plt.yticks(fontsize=16)
 
-    ax.legend(handles, unique_fields, title="Fielf")
+    ax.legend(handles, unique_fields, title="Field", fontsize=16, title_fontsize='20')
 
     fig.tight_layout()
     plt.show()
+    
+    # fig.savefig("graph marks", dpi=300, bbox_inches='tight')
+    # plt.close(fig)  # Close the figure to free up memory
 
 def credit_percentage_type(df):
     type_credits = df.groupby('Type')['Credits'].sum()
@@ -93,7 +100,7 @@ def credit_total_type(df):
         "grid.color": "#555555"
     })
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 4))
     credits_by_type.plot(kind='bar', color='lightgreen')
 
     plt.title('Total Number of Credits per Subject Type')
@@ -125,7 +132,7 @@ def credit_passed_type(df):
         "grid.color": "#555555"
     })
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 4))
     percentage_approved_credits.plot(kind='bar', color='skyblue')
 
     plt.title('% Distribution of Approved Credits by Type')
@@ -155,6 +162,8 @@ def mode_year(df, year:int, semester=None):
     return mode_column
     
 def choose_year(df, year:int, semester=None):
+    if year < 1 or year > 4:
+        return df
     start_row = (year - 1) * 10
     if semester is not None:
         start_row += (semester - 1) * 5
