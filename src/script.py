@@ -15,6 +15,18 @@ def marks_by_subject(df, type_graph="bars", year=1, semester=None):
     field_color_map = dict(zip(unique_fields, colors))
     bar_colors = fields.map(field_color_map)
     
+    sns.set_style("darkgrid")
+    plt.rcParams.update({
+        "axes.facecolor": "#A8B8C5", 
+        "figure.facecolor": "#141321",
+        "axes.labelcolor": "white",
+        "text.color": "white",
+        "xtick.color": "white",
+        "ytick.color": "white",
+        "axes.edgecolor": "white",
+        "grid.color": "#555555"
+    })
+
     fig, ax = plt.subplots()
 
     if(type_graph == "bars"):
@@ -45,6 +57,18 @@ def credit_percentage_type(df):
     total_credits = type_credits.sum()
     type_percentage = (type_credits / total_credits) * 100
 
+    sns.set_style("darkgrid")
+    plt.rcParams.update({
+        "axes.facecolor": "#A8B8C5", 
+        "figure.facecolor": "#A8B8C5",
+        "axes.labelcolor": "white",
+        "text.color": "white",
+        "xtick.color": "white",
+        "ytick.color": "white",
+        "axes.edgecolor": "white",
+        "grid.color": "#555555"
+    })
+
     plt.figure(figsize=(8, 8))
     pie_chart = type_percentage.plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3', labels=['']*len(type_percentage))
 
@@ -56,6 +80,18 @@ def credit_percentage_type(df):
 
 def credit_total_type(df):
     credits_by_type = df.groupby('Type')['Credits'].sum()
+
+    sns.set_style("darkgrid")
+    plt.rcParams.update({
+        "axes.facecolor": "#A8B8C5", 
+        "figure.facecolor": "#141321",
+        "axes.labelcolor": "white",
+        "text.color": "white",
+        "xtick.color": "white",
+        "ytick.color": "white",
+        "axes.edgecolor": "white",
+        "grid.color": "#555555"
+    })
 
     plt.figure(figsize=(10, 6))
     credits_by_type.plot(kind='bar', color='lightgreen')
@@ -76,6 +112,18 @@ def credit_passed_type(df):
     approved_credits_by_type = df_approved.groupby('Type')['Credits'].sum()
     total_credits_by_type = df.groupby('Type')['Credits'].sum()
     percentage_approved_credits = (approved_credits_by_type / total_credits_by_type) * 100
+
+    sns.set_style("darkgrid")
+    plt.rcParams.update({
+        "axes.facecolor": "#A8B8C5", 
+        "figure.facecolor": "#141321",
+        "axes.labelcolor": "white",
+        "text.color": "white",
+        "xtick.color": "white",
+        "ytick.color": "white",
+        "axes.edgecolor": "white",
+        "grid.color": "#555555"
+    })
 
     plt.figure(figsize=(10, 6))
     percentage_approved_credits.plot(kind='bar', color='skyblue')
@@ -137,8 +185,10 @@ def choose_year(df, year:int, semester=None):
 
 def main():
     df = pd.read_excel('dataset.xlsx')
-    # marks_by_subject(df, type_graph="bars", year=1)
-    credit_total_type(df)
+    #marks_by_subject(df, type_graph="bars", year=1)
+    credit_passed_type(df)
+    # credit_percentage_type(df)
+    # credit_total_type(df)
 
 if __name__ == "__main__":
     main()
