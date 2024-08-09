@@ -3,12 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def marks_by_subject(df, x_string, y_string, join_string, year:int, type_graph="bars", semester=None):
+def marks_by_subject(df, type_graph="bars", year=1, semester=None):
     df_subset = choose_year(df, year, semester)
 
-    x = df_subset[x_string]
-    y = pd.to_numeric(df_subset[y_string], errors='coerce')
-    fields = df_subset[join_string]
+    x = df_subset["Subject"]
+    y = pd.to_numeric(df_subset["Mark"], errors='coerce')
+    fields = df_subset["Field"]
 
     unique_fields = fields.unique()
     colors = sns.color_palette("husl", len(unique_fields))  
@@ -27,16 +27,68 @@ def marks_by_subject(df, x_string, y_string, join_string, year:int, type_graph="
         handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10, linestyle='') for color in colors]
 
     ax.set_ylim(0, 10)
-    ax.set_ylabel(y_string)
+    ax.set_ylabel("Mark")
     if semester == None:
         ax.set_title('Marks by Subject Year ' + str(year))
     else:
         ax.set_title('Marks by Subject Year ' + str(year) + ' and Semester ' + str(semester))
     plt.xticks(rotation=45, ha='right', rotation_mode='default')
 
-    ax.legend(handles, unique_fields, title=join_string)
+    ax.legend(handles, unique_fields, title="Fielf")
 
     fig.tight_layout()
+    plt.show()
+
+def credit_percentage_type(df):
+    type_credits = df.groupby('Type')['Credits'].sum()
+
+    total_credits = type_credits.sum()
+    type_percentage = (type_credits / total_credits) * 100
+
+    plt.figure(figsize=(8, 8))
+    pie_chart = type_percentage.plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3', labels=['']*len(type_percentage))
+
+    plt.legend(pie_chart.patches, type_percentage.index, title="Type", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+    plt.title('Credit Distribution in % by Type')
+    plt.ylabel('') 
+    plt.show()
+
+def credit_total_type(df):
+    credits_by_type = df.groupby('Type')['Credits'].sum()
+
+    plt.figure(figsize=(10, 6))
+    credits_by_type.plot(kind='bar', color='lightgreen')
+
+    plt.title('Total Number of Credits per Subject Type')
+    plt.xlabel('Type')
+    plt.ylabel('Total Number of Credits')
+    plt.xticks(rotation=45, ha='right', rotation_mode='default')
+
+    for i, v in enumerate(credits_by_type):
+        plt.text(i, v + 1, f'{v}', ha='center', va='bottom')
+
+    plt.show()
+
+def credit_passed_type(df):
+    df_approved = df[df['Mark'] != '-']
+
+    approved_credits_by_type = df_approved.groupby('Type')['Credits'].sum()
+    total_credits_by_type = df.groupby('Type')['Credits'].sum()
+    percentage_approved_credits = (approved_credits_by_type / total_credits_by_type) * 100
+
+    plt.figure(figsize=(10, 6))
+    percentage_approved_credits.plot(kind='bar', color='skyblue')
+
+    plt.title('% Distribution of Approved Credits by Type')
+    plt.xlabel('Type')
+    plt.ylabel('Approval % of Credits')
+
+    plt.xticks(rotation=45, ha='right', rotation_mode='default')
+
+    for i, v in enumerate(percentage_approved_credits):
+        plt.text(i, v + 1, f'{v:.1f}%', ha='center', va='bottom')
+
     plt.show()
 
 def mean_year(df, year:int, semester=None):
@@ -85,7 +137,8 @@ def choose_year(df, year:int, semester=None):
 
 def main():
     df = pd.read_excel('dataset.xlsx')
-    marks_by_subject(df, "Subject", "Mark", "Field", 1, type_graph="lines", semester=1)
+    # marks_by_subject(df, type_graph="bars", year=1)
+    credit_total_type(df)
 
 if __name__ == "__main__":
     main()
