@@ -146,6 +146,33 @@ def credit_passed_type(df):
 
     plt.show()
 
+def credit_percentage_denomination(df):
+    type_credits = df.groupby('Denomination')['Credits'].sum()
+
+    total_credits = type_credits.sum()
+    type_percentage = (type_credits / total_credits) * 100
+
+    sns.set_style("darkgrid")
+    plt.rcParams.update({
+        "axes.facecolor": "#A8B8C5", 
+        "figure.facecolor": "#A8B8C5",
+        "axes.labelcolor": "white",
+        "text.color": "white",
+        "xtick.color": "white",
+        "ytick.color": "white",
+        "axes.edgecolor": "white",
+        "grid.color": "#555555"
+    })
+
+    plt.figure(figsize=(8, 8))
+    pie_chart = type_percentage.plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3', labels=['']*len(type_percentage))
+
+    plt.legend(pie_chart.patches, type_percentage.index, title="Denomination", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+    plt.title('Credit Distribution in % by Type')
+    plt.ylabel('') 
+    plt.show()
+
 def mean_year(df, year:int, semester=None):
     df_subset = choose_year(df, year, semester)
     mean_column = pd.to_numeric(df_subset['Mark'], errors='coerce').mean()
