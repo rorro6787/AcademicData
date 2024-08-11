@@ -3,6 +3,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def plot_GPA(means, mean_expedient):
+    years = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(years, means, color='blue', label='Mean Year')
+    plt.bar('GPA', mean_expedient, color='green', label='Median Expedient')
+
+    plt.axhline(y=mean_expedient, color='red', linestyle='--', label='GPA')
+
+    plt.title('GPA over the Years')
+    plt.ylabel('Mean Value')
+    #plt.yticks(range(0, 10, 1))  
+    plt.yticks(np.arange(0, 10, 0.5))  
+    plt.legend()
+    plt.show()
+
 def marks_by_subject(df, type_graph="bars", year=0, semester=None):
     df_subset = choose_year(df, year, semester)
 
