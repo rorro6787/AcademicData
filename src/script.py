@@ -3,6 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def GPA_field(df):
+    df['Mark'] = pd.to_numeric(df['Mark'], errors='coerce')
+
+    mean_marks = df.groupby('Field')['Mark'].mean()
+
+    mean_marks.plot(kind='bar', color='blue')
+    plt.xlabel('Field')
+    plt.ylabel('Mean Mark')
+    plt.title('Mean Mark for each Field')
+    plt.axhline(y=pd.to_numeric(df['Mark'], errors='coerce').mean(), color='red', linestyle='--', label='GPA')
+    plt.xticks(rotation=45, ha='right', rotation_mode='default')
+    plt.yticks(np.arange(0, 10, 0.5))  
+    plt.show()
+
 def plot_GPA(means, mean_expedient):
     years = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
 
@@ -17,6 +31,34 @@ def plot_GPA(means, mean_expedient):
     #plt.yticks(range(0, 10, 1))  
     plt.yticks(np.arange(0, 10, 0.5))  
     plt.legend()
+    plt.show()
+
+def subject_percentage_repreated(df):
+    type_counts = df.groupby('Repeated')['Subject'].count()
+
+    total_count = type_counts.sum()
+    type_percentage = (type_counts / total_count) * 100
+
+    sns.set_style("darkgrid")
+    plt.rcParams.update({
+        "axes.facecolor": "#A8B8C5", 
+        "figure.facecolor": "#A8B8C5",
+        "axes.labelcolor": "white",
+        "text.color": "white",
+        "xtick.color": "white",
+        "ytick.color": "white",
+        "axes.edgecolor": "white",
+        "grid.color": "#555555"
+    })
+
+    plt.figure(figsize=(8, 8))
+    pie_chart = type_percentage.plot.pie(autopct='%1.1f%%', startangle=90, cmap='Set3', labels=['']*len(type_percentage))
+
+    plt.legend(pie_chart.patches, type_percentage.index, title="Repeated Status", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+    plt.title('Subject Distribution by Repeated Status')
+    plt.ylabel('') 
+
     plt.show()
 
 def marks_by_subject(df, type_graph="bars", year=0, semester=None):
